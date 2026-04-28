@@ -17,3 +17,4 @@ override.tf.json
 *tfplan*
 
 .terraform.tfstate.lock.info
+.terraform.lock.hcl
