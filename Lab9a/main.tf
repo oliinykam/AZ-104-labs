@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 4.0" # Використовуємо 4.x версію, як у вашому прикладі
+      version = "~> 4.0" 
     }
     random = {
       source  = "hashicorp/random"
@@ -13,11 +13,7 @@ terraform {
 
 provider "azurerm" {
   features {}
-  # У версії 4.0 іноді вимагається вказати subscription_id, 
-  # але якщо ви вже залогінені через az login, має працювати і так.
 }
-
-# === TASK 1: Resource Group & Web App ===
 
 resource "azurerm_resource_group" "rg9" {
   name     = "az104-rg9"
@@ -25,7 +21,7 @@ resource "azurerm_resource_group" "rg9" {
 }
 
 resource "random_id" "webapp_suffix" {
-  byte_length = 4 # Згенерує 8 символів (hex), наприклад "a1b2c3d4"
+  byte_length = 4 
 }
 
 resource "azurerm_service_plan" "asp9" {
@@ -43,14 +39,12 @@ resource "azurerm_linux_web_app" "webapp" {
   service_plan_id     = azurerm_service_plan.asp9.id
 
   site_config {
-    always_on = false # Економить ресурси на S1
+    always_on = false 
     application_stack {
       php_version = "8.2"
     }
   }
 }
-
-# === TASK 2: Deployment Slot ===
 
 resource "azurerm_linux_web_app_slot" "staging" {
   name           = "staging"
@@ -64,16 +58,12 @@ resource "azurerm_linux_web_app_slot" "staging" {
   }
 }
 
-# === TASK 3: GitHub Deployment Settings ===
-
 resource "azurerm_app_service_source_control_slot" "github_staging" {
   slot_id                = azurerm_linux_web_app_slot.staging.id
   repo_url               = "https://github.com/Azure-Samples/php-docs-hello-world"
   branch                 = "master"
   use_manual_integration = true
 }
-
-# === TASK 5: Autoscaling (Rules Based) ===
 
 resource "azurerm_monitor_autoscale_setting" "autoscale" {
   name                = "az104-autoscale"
